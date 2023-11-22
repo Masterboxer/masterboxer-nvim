@@ -113,6 +113,18 @@ require('lazy').setup({
 
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
+
+  -- A plugin that acts exactly like Gitlens for line by line blame
+  {
+    'APZelos/blamer.nvim',
+
+    config = function()
+      vim.cmd('highlight Blamer guifg=#F89B13')
+      vim.api.nvim_set_keymap("n", "<leader>gb", "<cmd>BlamerToggle<CR>",
+        { noremap = true, silent = true, desc = "Toggle [G]it Blamer" })
+    end
+  },
+
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
