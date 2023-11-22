@@ -112,7 +112,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {} },
+  { 'folke/which-key.nvim', opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -189,16 +189,19 @@ require('lazy').setup({
     'ThePrimeagen/vim-be-good'
   },
 
-  -- For opening command line tools in neovim
   {
-    'voldikss/vim-floaterm',
+    'akinsho/toggleterm.nvim',
+    config = function()
+      local Terminal = require('toggleterm.terminal').Terminal
+      local lazygit  = Terminal:new({ cmd = "lazygit", hidden = true })
 
-    -- Adding Keymaps to open floting terminal
-    vim.keymap.set('n', '<F1>', ':FloatermNew<CR>', { noremap = true, silent = true }),
+      function _G._lazygit_toggle()
+        lazygit:toggle()
+      end
+
+      vim.api.nvim_set_keymap("n", "<leader>gg", "<cmd>lua _lazygit_toggle()<CR>", { noremap = true, silent = true })
+    end
   },
-
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
