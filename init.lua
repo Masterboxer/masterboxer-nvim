@@ -189,6 +189,7 @@ require('lazy').setup({
     'ThePrimeagen/vim-be-good'
   },
 
+  -- For opening Lazygit in a floating terminal
   {
     'akinsho/toggleterm.nvim',
     config = function()
@@ -207,7 +208,7 @@ require('lazy').setup({
           vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
 
-        -- function that runs on closing the terminal
+        -- function that runson closing the terminal
         on_close = function()
           vim.cmd("startinsert!")
         end,
