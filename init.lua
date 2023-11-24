@@ -70,8 +70,17 @@ require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
   -- Git related plugins
-  'tpope/vim-fugitive',
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      vim.api.nvim_set_keymap("n", "<leader>ga", "<cmd>:diffget //2<CR>",
+        { noremap = true, silent = true, desc = "[D]iff Get Left" })
+      vim.api.nvim_set_keymap("n", "<leader>gl", "<cmd>:diffget //3<CR>",
+        { noremap = true, silent = true, desc = "[D]iff Get Right" })
+    end
+  },
   'tpope/vim-rhubarb',
+  'tpope/vim-unimpaired',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -138,7 +147,12 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+        vim.keymap.set('n', '<leader>ho', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview Git Hunk' })
+        vim.keymap.set('n', '<leader>hi', require('gitsigns').preview_hunk_inline,
+          { buffer = bufnr, desc = 'Preview Hunk Inline' })
+        vim.keymap.set('n', '<leader>hn', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Next Hunk' })
+        vim.keymap.set('n', '<leader>hp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'Previous Hunk' })
+        vim.keymap.set('n', '<leader>hb', require('gitsigns').blame_line, { buffer = bufnr, desc = 'View Git Blame' })
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
@@ -425,6 +439,8 @@ vim.keymap.set('n', '<leader>/', function()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set("n", "<leader>gm", "<cmd>Git blame<CR>",
+  { noremap = true, silent = true, desc = "Toggle [F]ull Length Git Blame" })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -553,7 +569,7 @@ require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
+  ['<leader>h'] = { name = '[G]it Signs', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
