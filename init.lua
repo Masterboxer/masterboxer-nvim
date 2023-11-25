@@ -148,6 +148,15 @@ require('lazy').setup({
       "MunifTanjim/nui.nvim",
       -- "3rd/image.nvim",
     },
+    config = function()
+      vim.api.nvim_set_keymap("n", "<leader>n", "<cmd>Neotree filesystem reveal<CR>",
+        { noremap = true, silent = true, desc = "[N]eo Tree" })
+      require("neo-tree").setup({
+        window = {
+          position = "current"
+        },
+      })
+    end
   },
 
   -- A plugin that acts exactly like Gitlens for line by line blame
