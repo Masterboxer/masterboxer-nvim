@@ -131,6 +131,14 @@ require('lazy').setup({
   --   'ThePrimeagen/harpoon'
   -- },
 
+  {
+    'sindrets/diffview.nvim'
+  },
+
+  {
+    'nvim-tree/nvim-web-devicons'
+  },
+
   -- A plugin that acts exactly like Gitlens for line by line blame
   {
     'APZelos/blamer.nvim',
@@ -356,11 +364,13 @@ vim.o.termguicolors = true
 -- by pressing jk.
 vim.api.nvim_set_keymap('i', 'jk', '<esc>', { noremap = true })
 
--- Remap '1' to go to the start of the line
+-- Remap '1' to go to the start of the line in normal and visual mode
 vim.api.nvim_set_keymap('n', '1', '0', { noremap = true })
+vim.api.nvim_set_keymap('v', '1', '0', { noremap = true })
 
--- Remap '0' to go to the end of the line
+-- Remap '0' to go to the end of the line in normal and visual mode
 vim.api.nvim_set_keymap('n', '0', '$', { noremap = true })
+vim.api.nvim_set_keymap('v', '0', '$', { noremap = true })
 
 -- [[ Basic Keymaps ]]
 
