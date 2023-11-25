@@ -123,6 +123,14 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
 
+  -- {
+  --   'nvim-lua/plenary.nvim'
+  -- },
+  --
+  -- {
+  --   'ThePrimeagen/harpoon'
+  -- },
+
   -- A plugin that acts exactly like Gitlens for line by line blame
   {
     'APZelos/blamer.nvim',
@@ -347,6 +355,12 @@ vim.o.termguicolors = true
 -- NOTE: Adding a custom keymap to change to normal mode
 -- by pressing jk.
 vim.api.nvim_set_keymap('i', 'jk', '<esc>', { noremap = true })
+
+-- Remap '1' to go to the start of the line
+vim.api.nvim_set_keymap('n', '1', '0', { noremap = true })
+
+-- Remap '0' to go to the end of the line
+vim.api.nvim_set_keymap('n', '0', '$', { noremap = true })
 
 -- [[ Basic Keymaps ]]
 
