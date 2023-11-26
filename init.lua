@@ -123,20 +123,24 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
 
-  -- {
-  --   'nvim-lua/plenary.nvim'
-  -- },
-  --
-  -- {
-  --   'ThePrimeagen/harpoon'
-  -- },
-
   {
-    'sindrets/diffview.nvim'
+    'ThePrimeagen/harpoon',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    },
+    config = function()
+      vim.api.nvim_set_keymap('n', '<leader>pa', ':lua require("harpoon.mark").add_file()<cr>',
+        { noremap = true, silent = true, desc = "[A]dd Marks" })
+      vim.api.nvim_set_keymap('n', '<leader>pp', ':lua require("harpoon.ui").toggle_quick_menu()<cr>',
+        { noremap = true, silent = true, desc = "[V]iew Marks" })
+    end
   },
 
   {
-    'nvim-tree/nvim-web-devicons'
+    'sindrets/diffview.nvim',
+    dependencies = {
+      'nvim-tree/nvim-web-devicons'
+    }
   },
 
   {
