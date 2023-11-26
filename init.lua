@@ -146,7 +146,6 @@ require('lazy').setup({
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons",
       "MunifTanjim/nui.nvim",
-      -- "3rd/image.nvim",
     },
     config = function()
       vim.api.nvim_set_keymap("n", "<leader>n", "<cmd>Neotree filesystem reveal<CR>",
