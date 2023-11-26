@@ -123,18 +123,18 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
 
-  {
-    'ThePrimeagen/harpoon',
-    dependencies = {
-      'nvim-lua/plenary.nvim'
-    },
-    config = function()
-      vim.api.nvim_set_keymap('n', '<leader>pa', ':lua require("harpoon.mark").add_file()<cr>',
-        { noremap = true, silent = true, desc = "[A]dd Marks" })
-      vim.api.nvim_set_keymap('n', '<leader>pp', ':lua require("harpoon.ui").toggle_quick_menu()<cr>',
-        { noremap = true, silent = true, desc = "[V]iew Marks" })
-    end
-  },
+  -- {
+  --   'ThePrimeagen/harpoon',
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim'
+  --   },
+  --   config = function()
+  --     vim.api.nvim_set_keymap('n', '<leader>pa', ':lua require("harpoon.mark").add_file()<cr>',
+  --       { noremap = true, silent = true, desc = "[A]dd Marks" })
+  --     vim.api.nvim_set_keymap('n', '<leader>pp', ':lua require("harpoon.ui").toggle_quick_menu()<cr>',
+  --       { noremap = true, silent = true, desc = "[V]iew Marks" })
+  --   end
+  -- },
 
   {
     'sindrets/diffview.nvim',
@@ -476,7 +476,13 @@ vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader><space>', function()
+  require('telescope.builtin').buffers({
+    sort_lastused = true,
+    initial_mode = "normal",
+  })
+end, { desc = '[ ] Find existing buffers' })
+
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
