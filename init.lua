@@ -137,6 +137,13 @@ require('lazy').setup({
   -- },
 
   {
+    "m4xshen/autoclose.nvim",
+    config = function()
+      require("autoclose").setup()
+    end
+  },
+
+  {
     'sindrets/diffview.nvim',
     dependencies = {
       'nvim-tree/nvim-web-devicons'
