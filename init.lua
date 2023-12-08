@@ -107,7 +107,9 @@ require('lazy').setup({
     end
   },
 
-  { 'nvimtools/none-ls.nvim' },
+  {
+    'prettier/vim-prettier'
+  },
 
   {
     'sindrets/diffview.nvim',
