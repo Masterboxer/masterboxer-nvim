@@ -167,6 +167,9 @@ require('lazy').setup({
         window = {
           position = "current"
         },
+        filesystem = {
+          hijack_netrw_behavior = "disabled",
+        }
       })
     end
   },
@@ -399,6 +402,9 @@ vim.api.nvim_set_keymap('i', 'jk', '<esc>', { noremap = true })
 -- Remap '1' to go to the start of the line in normal and visual mode
 vim.api.nvim_set_keymap('n', '1', '0', { noremap = true })
 vim.api.nvim_set_keymap('v', '1', '0', { noremap = true })
+
+vim.api.nvim_set_keymap("n", "<C-d>", "<C-d>zz", { noremap = true })
+vim.api.nvim_set_keymap("n", "<C-u>", "<C-u>zz", { noremap = true })
 
 -- Remap '0' to go to the end of the line in normal and visual mode
 vim.api.nvim_set_keymap('n', '0', '$', { noremap = true })
