@@ -227,6 +227,13 @@ require('lazy').setup({
     opts = {},
   },
 
+  {
+    'NvChad/nvim-colorizer.lua',
+    config = function()
+      require("colorizer").setup()
+    end
+  },
+
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
