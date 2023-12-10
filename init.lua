@@ -403,7 +403,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- Change line endings to unix by default anytime a new buffer is opened.
-vim.cmd([[autocmd BufRead,BufNewFile * set ff=unix]])
+-- vim.cmd([[autocmd BufRead,BufNewFile * set ff=unix]])
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
