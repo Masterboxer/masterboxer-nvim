@@ -115,7 +115,15 @@ require('lazy').setup({
     'sindrets/diffview.nvim',
     dependencies = {
       'nvim-tree/nvim-web-devicons'
-    }
+    },
+    config = function()
+      vim.api.nvim_set_keymap("n", "<leader>ff", "<cmd>DiffviewFileHistory %<CR>",
+        { noremap = true, silent = true, desc = "[C]urrent File History" })
+      vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>DiffviewFileHistory<CR>",
+        { noremap = true, silent = true, desc = "[G]lobal File History" })
+      vim.api.nvim_set_keymap("n", "<leader>fc", "<cmd>DiffviewClose<CR>",
+        { noremap = true, silent = true, desc = "[C]lose File History" })
+    end
   },
 
   {
@@ -617,6 +625,7 @@ require('which-key').register {
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
   ['<leader>h'] = { name = '[G]it Signs', _ = 'which_key_ignore' },
+  ['<leader>f'] = { name = '[F]ile History', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
