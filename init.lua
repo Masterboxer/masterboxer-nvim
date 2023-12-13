@@ -404,6 +404,9 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Delete current buffer
 vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffer' })
 
+-- Remove the ^M that comes sometimes
+vim.keymap.set('n', '<leader>mm', "<cmd>:%s/\r$//<CR>", { desc = 'Remove Weird M Line Ending' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
@@ -411,7 +414,7 @@ vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open float
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- Change line endings to unix by default anytime a new buffer is read.
-vim.cmd([[autocmd BufRead,BufNewFile * set ff=unix]])
+-- vim.cmd([[autocmd BufRead,BufNewFile * set ff=unix]])
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
