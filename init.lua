@@ -238,7 +238,14 @@ require('lazy').setup({
   {
     'NvChad/nvim-colorizer.lua',
     config = function()
-      require("colorizer").setup()
+      require("colorizer").setup({
+        filetypes = {
+          'css',
+          'scss',
+          'javascript',
+          html = { mode = 'foreground' }
+        }
+      })
     end
   },
 
