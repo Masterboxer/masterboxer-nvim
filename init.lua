@@ -87,19 +87,6 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
 
-  -- {
-  --   'ThePrimeagen/harpoon',
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim'
-  --   },
-  --   config = function()
-  --     vim.api.nvim_set_keymap('n', '<leader>pa', ':lua require("harpoon.mark").add_file()<cr>',
-  --       { noremap = true, silent = true, desc = "[A]dd Marks" })
-  --     vim.api.nvim_set_keymap('n', '<leader>pp', ':lua require("harpoon.ui").toggle_quick_menu()<cr>',
-  --       { noremap = true, silent = true, desc = "[V]iew Marks" })
-  --   end
-  -- },
-
   {
     "m4xshen/autoclose.nvim",
     config = function()
@@ -383,20 +370,8 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- NOTE: Adding a custom keymap to change to normal mode
--- by pressing jk.
-vim.api.nvim_set_keymap('i', 'jk', '<esc>', { noremap = true })
-
--- Remap '1' to go to the start of the line in normal and visual mode
-vim.api.nvim_set_keymap('n', '1', '0', { noremap = true })
-vim.api.nvim_set_keymap('v', '1', '0', { noremap = true })
-
 vim.api.nvim_set_keymap("n", "<C-d>", "<C-d>zz", { noremap = true })
 vim.api.nvim_set_keymap("n", "<C-u>", "<C-u>zz", { noremap = true })
-
--- Remap '0' to go to the end of the line in normal and visual mode
-vim.api.nvim_set_keymap('n', '0', '$', { noremap = true })
-vim.api.nvim_set_keymap('v', '0', '$', { noremap = true })
 
 -- [[ Basic Keymaps ]]
 
@@ -412,7 +387,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffer' })
 
 -- Remove the ^M that comes sometimes
-vim.keymap.set('n', '<leader>mm', "<cmd>:%s/\r$//<CR>", { desc = 'Remove Weird M Line Ending' })
+vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>", { desc = 'Set Fileformat to Unix' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
