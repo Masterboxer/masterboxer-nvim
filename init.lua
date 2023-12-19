@@ -495,11 +495,20 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
       'bash' },
+
+    -- Lua LSP throws weird warnings if this field is not added
+    modules = {},
+
+    -- Install parsers synchronously (only applied to `ensure_installed`)
+    sync_install = false,
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+
+    -- List of parsers to ignore installing (or "all")
+    ignore_install = {},
 
     highlight = { enable = true },
     indent = { enable = true },
