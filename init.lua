@@ -387,7 +387,7 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffer' })
 
 -- Remove the ^M that comes sometimes
-vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>", { desc = 'Set Fileformat to Unix' })
+vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>:w<CR>", { desc = 'Set Fileformat to Unix' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
