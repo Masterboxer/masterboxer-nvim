@@ -386,6 +386,9 @@ vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = tr
 -- Delete current buffer
 vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffer' })
 
+-- Delete all buffers
+vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete all buffers' })
+
 -- Set File Format to Unix 
 vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>:w<CR>", { desc = 'Set Fileformat to Unix' })
 
