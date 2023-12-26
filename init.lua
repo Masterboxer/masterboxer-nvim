@@ -95,10 +95,6 @@ require('lazy').setup({
   },
 
   {
-    'prettier/vim-prettier'
-  },
-
-  {
     'stevearc/oil.nvim',
     opts = {},
     config = function()
@@ -499,7 +495,7 @@ vim.defer_fn(function()
     sync_install = false,
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    auto_install = true,
 
     -- List of parsers to ignore installing (or "all")
     ignore_install = {},
