@@ -372,21 +372,11 @@ vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffe
 -- Delete all buffers
 vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete all buffers' })
 
--- Set File Format to Unix
-vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>:w<CR>", { desc = 'Set Fileformat to Unix' })
-
--- Format with Prettier when there are Unix/DOS clashes (Like getting that weird ^M issue)
-vim.keymap.set('n', '<leader>mp', "<cmd>:set ff=dos<CR><cmd>:set ff=dos<CR>:Prettier<CR>:%s/\\r//g<CR>:set ff=unix<CR>:w<CR>gg",
-  { desc = "Format with Prettier" })
-
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-
--- Change line endings to unix by default anytime a new buffer is read.
--- vim.cmd([[autocmd BufRead,BufNewFile * set ff=unix]])
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
