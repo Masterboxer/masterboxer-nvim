@@ -43,8 +43,6 @@ require('lazy').setup({
         { noremap = true, silent = true, desc = "[D]iff Get Right" })
     end
   },
-  'tpope/vim-rhubarb',
-  'tpope/vim-unimpaired',
 
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
@@ -147,8 +145,9 @@ require('lazy').setup({
           { buffer = bufnr, desc = 'Preview Hunk Inline' })
         vim.keymap.set('n', '<leader>hn', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Next Hunk' })
         vim.keymap.set('n', '<leader>hp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'Previous Hunk' })
-        vim.keymap.set('n', '<leader>hb', require('gitsigns').blame_line, { buffer = bufnr, desc = 'View Git Blame' })
-
+        vim.keymap.set('n', '<leader>hb', function ()
+          require('gitsigns').blame_line { full = true }
+        end, {buffer = bufnr})
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
         vim.keymap.set({ 'n', 'v' }, ']c', function()
@@ -213,6 +212,7 @@ require('lazy').setup({
           'css',
           'scss',
           'javascript',
+          'html',
           html = { mode = 'foreground' }
         }
       })
