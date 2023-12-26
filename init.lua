@@ -99,6 +99,15 @@ require('lazy').setup({
   },
 
   {
+    'stevearc/oil.nvim',
+    opts = {},
+    config = function()
+      require("oil").setup()
+      vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+    end
+  },
+
+  {
     'sindrets/diffview.nvim',
     dependencies = {
       'nvim-tree/nvim-web-devicons'
@@ -110,28 +119,6 @@ require('lazy').setup({
         { noremap = true, silent = true, desc = "[G]lobal File History" })
       vim.api.nvim_set_keymap("n", "<leader>fc", "<cmd>DiffviewClose<CR>",
         { noremap = true, silent = true, desc = "[C]lose File History" })
-    end
-  },
-
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    branch = "v3.x",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-tree/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
-    config = function()
-      vim.api.nvim_set_keymap("n", "<leader>n", "<cmd>Neotree filesystem reveal<CR>",
-        { noremap = true, silent = true, desc = "[N]eo Tree" })
-      require("neo-tree").setup({
-        window = {
-          position = "current"
-        },
-        filesystem = {
-          hijack_netrw_behavior = "disabled",
-        }
-      })
     end
   },
 
@@ -389,11 +376,12 @@ vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffe
 -- Delete all buffers
 vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete all buffers' })
 
--- Set File Format to Unix 
+-- Set File Format to Unix
 vim.keymap.set('n', '<leader>mm', "<cmd>:set ff=unix<CR>:w<CR>", { desc = 'Set Fileformat to Unix' })
 
 -- Format with Prettier when there are Unix/DOS clashes (Like getting that weird ^M issue)
-vim.keymap.set('n', '<leader>mp', "<cmd>:set ff=dos<CR>:Prettier<CR>:%s/\\r//g<CR>:set ff=unix<CR>:w<CR>gg", { desc = "Format with Prettier" })
+vim.keymap.set('n', '<leader>mp', "<cmd>:set ff=dos<CR><cmd>:set ff=dos<CR>:Prettier<CR>:%s/\\r//g<CR>:set ff=unix<CR>:w<CR>gg",
+  { desc = "Format with Prettier" })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
