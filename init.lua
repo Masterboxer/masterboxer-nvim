@@ -227,6 +227,19 @@ require('lazy').setup({
     'ThePrimeagen/vim-be-good'
   },
 
+  {
+    'nvimtools/none-ls.nvim',
+    config = function()
+      local null_ls = require("null-ls")
+      null_ls.setup({
+        on_attach = on_attach,
+        sources = {
+          null_ls.builtins.formatting.prettier
+        },
+      })
+    end
+  },
+
   -- For opening Lazygit in a floating terminal
   {
     'akinsho/toggleterm.nvim',
@@ -550,7 +563,7 @@ end, 0)
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -564,6 +577,28 @@ local on_attach = function(_, bufnr)
 
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
+
+  local opts = { buffer = bufnr, remap = false }
+
+  local function allow_format(servers)
+    return function(client) return vim.tbl_contains(servers, client.name) end
+  end
+
+  vim.keymap.set({ 'n', 'x' }, '<leader>mm', function()
+    vim.lsp.buf.format({
+      async = false,
+      timeout_ms = 10000,
+      filter = allow_format({
+        'lua_ls',
+        'rust_analyzer',
+        'null-ls',
+        'dartls',
+        'gopls',
+        'clangd',
+        'jsonls',
+      })
+    })
+  end, opts)
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
