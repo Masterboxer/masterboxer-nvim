@@ -147,7 +147,7 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>hp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'Previous Hunk' })
         vim.keymap.set('n', '<leader>hb', function ()
           require('gitsigns').blame_line { full = true }
-        end, {buffer = bufnr})
+        end, {buffer = bufnr, desc = 'Show Previous Git Changes'})
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
         vim.keymap.set({ 'n', 'v' }, ']c', function()
