@@ -145,9 +145,9 @@ require('lazy').setup({
           { buffer = bufnr, desc = 'Preview Hunk Inline' })
         vim.keymap.set('n', '<leader>hn', require('gitsigns').next_hunk, { buffer = bufnr, desc = 'Next Hunk' })
         vim.keymap.set('n', '<leader>hp', require('gitsigns').prev_hunk, { buffer = bufnr, desc = 'Previous Hunk' })
-        vim.keymap.set('n', '<leader>hb', function ()
+        vim.keymap.set('n', '<leader>hb', function()
           require('gitsigns').blame_line { full = true }
-        end, {buffer = bufnr, desc = 'Show Previous Git Changes'})
+        end, { buffer = bufnr, desc = 'Show Previous Git Changes' })
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
         vim.keymap.set({ 'n', 'v' }, ']c', function()
@@ -578,7 +578,7 @@ on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  local opts = { buffer = bufnr, remap = false }
+  local opts = { buffer = bufnr, remap = false, desc = "Format With Prettier" }
 
   local function allow_format(servers)
     return function(client) return vim.tbl_contains(servers, client.name) end
@@ -639,6 +639,7 @@ require('which-key').register {
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
   ['<leader>b'] = { name = '[B]uffer', _ = 'which_key_ignore' },
+  ['<leader>m'] = { name = '[F]ormat', _ = 'which_key_ignore' },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
