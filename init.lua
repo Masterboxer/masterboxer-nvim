@@ -102,6 +102,14 @@ require('lazy').setup({
   },
 
   {
+    'chentoast/marks.nvim',
+
+    config = function()
+      require 'marks'.setup()
+    end
+  },
+
+  {
     'sindrets/diffview.nvim',
     dependencies = {
       'nvim-tree/nvim-web-devicons'
