@@ -240,7 +240,7 @@ require('lazy').setup({
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
-        on_attach = on_attach,
+        on_attach = On_attach,
         sources = {
           null_ls.builtins.formatting.prettier
         },
@@ -577,7 +577,7 @@ end, 0)
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-on_attach = function(_, bufnr)
+On_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -705,7 +705,7 @@ mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = on_attach,
+      on_attach = On_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
