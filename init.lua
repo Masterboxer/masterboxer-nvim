@@ -239,7 +239,7 @@ require('lazy').setup({
   --   },
   --
   --   config = function()
-  --     require 'marks'.setup()
+  --     require("flutter-tools").setup()
   --   end
   -- },
 
@@ -523,7 +523,7 @@ vim.defer_fn(function()
     auto_install = true,
 
     -- List of parsers to ignore installing (or "all")
-    ignore_install = {},
+    ignore_install = { 'dartls' },
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -614,7 +614,6 @@ On_attach = function(_, bufnr)
         'lua_ls',
         'rust_analyzer',
         'null-ls',
-        'dartls',
         'gopls',
         'clangd',
         'jsonls',
