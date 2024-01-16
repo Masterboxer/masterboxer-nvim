@@ -230,10 +230,18 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
-  -- For learning vim motions
-  {
-    'ThePrimeagen/vim-be-good'
-  },
+  -- {
+  --   'akinsho/flutter-tools.nvim',
+  --   lazy = false,
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'stevearc/dressing.nvim',   -- optional for vim.ui.select
+  --   },
+  --
+  --   config = function()
+  --     require 'marks'.setup()
+  --   end
+  -- },
 
   {
     'nvimtools/none-ls.nvim',
@@ -674,8 +682,8 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  tsserver = {},
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
 
   lua_ls = {
     Lua = {
