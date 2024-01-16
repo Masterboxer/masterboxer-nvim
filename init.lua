@@ -523,7 +523,7 @@ vim.defer_fn(function()
     auto_install = true,
 
     -- List of parsers to ignore installing (or "all")
-    ignore_install = { 'dartls' },
+    ignore_install = {},
 
     highlight = { enable = true },
     indent = { enable = true },
