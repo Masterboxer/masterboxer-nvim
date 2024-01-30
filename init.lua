@@ -86,6 +86,28 @@ require('lazy').setup({
   { 'folke/which-key.nvim',  opts = {} },
 
   {
+    "epwalsh/obsidian.nvim",
+    version = "*",
+    lazy = true,
+    ft = "markdown",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    opts = {
+      workspaces = {
+        {
+          name = "personal",
+          path = "~/Notes/Personal",
+        },
+        {
+          name = "work",
+          path = "~/Notes/Work",
+        },
+      },
+    },
+  },
+
+  {
     "m4xshen/autoclose.nvim",
     config = function()
       require("autoclose").setup()
@@ -405,10 +427,13 @@ vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Delete current buffer
-vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete current buffer' })
+vim.keymap.set('n', '<leader>bc', "<cmd>:%bd|e#<CR>", { desc = 'Close All But Current' })
+
+-- Delete current buffer
+vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete Current Buffer' })
 
 -- Delete all buffers
-vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete all buffers' })
+vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete All Buffers' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -691,7 +716,9 @@ local servers = {
   -- rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-
+  angularls = {
+    cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "", "--forceStrictTemplates" }
+  },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
