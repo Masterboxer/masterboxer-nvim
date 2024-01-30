@@ -435,6 +435,9 @@ vim.keymap.set('n', '<leader>bb', "<cmd>:bd<CR>", { desc = 'Delete Current Buffe
 -- Delete all buffers
 vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete All Buffers' })
 
+-- Delete all buffers
+vim.keymap.set('n', '<leader>dm', "<cmd>:delmarks!<CR>:delmarks A-Z0-9<CR>", { desc = 'Delete All Marks' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
