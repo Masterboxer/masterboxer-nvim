@@ -222,6 +222,7 @@ require('lazy').setup({
         filetypes = {
           'css',
           'scss',
+          'sass',
           'javascript',
           'html',
           html = { mode = 'foreground' }
