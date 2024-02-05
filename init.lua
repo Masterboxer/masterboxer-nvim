@@ -86,28 +86,6 @@ require('lazy').setup({
   { 'folke/which-key.nvim',  opts = {} },
 
   {
-    "epwalsh/obsidian.nvim",
-    version = "*",
-    lazy = true,
-    ft = "markdown",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    opts = {
-      workspaces = {
-        {
-          name = "personal",
-          path = "~/Notes/Personal",
-        },
-        {
-          name = "work",
-          path = "~/Notes/Work",
-        },
-      },
-    },
-  },
-
-  {
     "m4xshen/autoclose.nvim",
     config = function()
       require("autoclose").setup()
@@ -442,7 +420,7 @@ vim.keymap.set('n', '<leader>dm', "<cmd>:delmarks!<CR>:delmarks A-Z0-9<CR>", { d
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+-- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -537,7 +515,13 @@ vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+
+vim.keymap.set('n', '<leader>q', function()
+  require('telescope.builtin').diagnostics({
+    initial_mode = "normal",
+  })
+end, { desc = '[S]earch [D]iagnostics' })
+
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
@@ -719,9 +703,9 @@ local servers = {
   -- rust_analyzer = {},
   tsserver = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  angularls = {
-    cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "", "--forceStrictTemplates" }
-  },
+  -- angularls = {
+  --   cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "", "--forceStrictTemplates" }
+  -- },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
