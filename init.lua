@@ -85,6 +85,17 @@ require('lazy').setup({
   -- Useful plugin to show you pending keybinds.
   { 'folke/which-key.nvim',  opts = {} },
 
+  --Plugin to manage folds better
+  -- {
+  --   'kevinhwang91/nvim-ufo',
+  --   dependencies = {
+  --     'kevinhwang91/promise-async'
+  --   },
+  --   config = function()
+  --     require("ufo").setup()
+  --   end
+  -- },
+
   {
     "m4xshen/autoclose.nvim",
     config = function()
