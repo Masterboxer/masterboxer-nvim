@@ -252,19 +252,6 @@ require('lazy').setup({
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
 
-  -- {
-  --   'akinsho/flutter-tools.nvim',
-  --   lazy = false,
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --     'stevearc/dressing.nvim',   -- optional for vim.ui.select
-  --   },
-  --
-  --   config = function()
-  --     require("flutter-tools").setup()
-  --   end
-  -- },
-
   {
     'nvimtools/none-ls.nvim',
     config = function()
