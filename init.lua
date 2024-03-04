@@ -422,6 +422,9 @@ vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete All Buffers'
 -- Delete all buffers
 vim.keymap.set('n', '<leader>dm', "<cmd>:delmarks!<CR>:delmarks A-Z0-9<CR>", { desc = 'Delete All Marks' })
 
+-- Open terminal to current directory
+vim.keymap.set('n', '<leader>tt', "<cmd>:cd %:p:h<CR>:terminal<CR>:startinsert<CR>", { desc = 'Open Terminal In Current Directory' })
+
 -- Spectre Related Keymaps
 vim.keymap.set('n', '<leader>ss', '<cmd>lua require("spectre").toggle()<CR>', {
     desc = "Toggle Spectre"
@@ -706,6 +709,7 @@ require('which-key').register {
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
   ['<leader>b'] = { name = '[B]uffer', _ = 'which_key_ignore' },
   ['<leader>m'] = { name = '[F]ormat', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
