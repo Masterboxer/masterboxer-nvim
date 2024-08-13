@@ -51,6 +51,12 @@ require('lazy').setup({
     }
   },
 
+  {
+    'barrett-ruth/live-server.nvim',
+    cmd = { 'LiveServerStart', 'LiveServerStop' },
+    config = true
+  },
+
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
