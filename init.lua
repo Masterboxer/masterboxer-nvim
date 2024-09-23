@@ -254,7 +254,8 @@ require('lazy').setup({
       null_ls.setup({
         on_attach = On_attach,
         sources = {
-          null_ls.builtins.formatting.prettier
+          null_ls.builtins.formatting.prettier,
+          null_ls.builtins.diagnostics.eslint
         },
       })
     end
@@ -687,7 +688,10 @@ require('which-key').register {
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
-require('mason-lspconfig').setup()
+require('mason-lspconfig').setup({
+  ensure_installed = { "ts_ls", "tsp_server", "eslint" }
+}
+)
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -702,7 +706,9 @@ local servers = {
   -- gopls = {},
   -- pyright = {},
   -- rust_analyzer = {},
-  tsserver = {},
+  ts_ls = {},
+  eslint = {},
+  tsp_server = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
   -- angularls = {
   --   cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "", "--forceStrictTemplates" }
