@@ -251,11 +251,12 @@ require('lazy').setup({
     'nvimtools/none-ls.nvim',
     config = function()
       local null_ls = require("null-ls")
+      vim.api.nvim_create_augroup("LspFormatting", {})
+
       null_ls.setup({
-        on_attach = On_attach,
         sources = {
+          null_ls.builtins.diagnostics.eslint,
           null_ls.builtins.formatting.prettier,
-          null_ls.builtins.diagnostics.eslint
         },
       })
     end
