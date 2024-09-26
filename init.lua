@@ -251,12 +251,11 @@ require('lazy').setup({
     'nvimtools/none-ls.nvim',
     config = function()
       local null_ls = require("null-ls")
-      vim.api.nvim_create_augroup("LspFormatting", {})
-
       null_ls.setup({
+        on_attach = On_attach,
         sources = {
-          null_ls.builtins.diagnostics.eslint,
           null_ls.builtins.formatting.prettier,
+          null_ls.builtins.diagnostics.eslint
         },
       })
     end
@@ -689,10 +688,7 @@ require('which-key').register {
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
 require('mason').setup()
-require('mason-lspconfig').setup({
-  ensure_installed = { "ts_ls", "tsp_server", "eslint" }
-}
-)
+require('mason-lspconfig').setup()
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -703,17 +699,10 @@ require('mason-lspconfig').setup({
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
   ts_ls = {},
   eslint = {},
-  tsp_server = {},
   html = { filetypes = { 'html', 'twig', 'hbs' } },
-  -- angularls = {
-  --   cmd = { "ngserver", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "", "--forceStrictTemplates" }
-  -- },
+  angularls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
