@@ -263,6 +263,7 @@ require('lazy').setup({
       null_ls.setup({
         on_attach = On_attach,
         sources = {
+          null_ls.builtins.formatting.black,
           null_ls.builtins.formatting.prettier,
           null_ls.builtins.diagnostics.eslint
         },
@@ -678,21 +679,6 @@ On_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 end
-
--- document existing key chains
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = '[G]it Signs', _ = 'which_key_ignore' },
-  ['<leader>f'] = { name = '[F]ile History', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-  ['<leader>b'] = { name = '[B]uffer', _ = 'which_key_ignore' },
-  ['<leader>m'] = { name = '[F]ormat', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]erminal', _ = 'which_key_ignore' },
-}
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
