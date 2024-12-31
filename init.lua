@@ -80,6 +80,21 @@ require('lazy').setup({
   },
 
   {
+    "ray-x/go.nvim",
+    dependencies = {
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
+    end,
+    event = { "CmdlineEnter" },
+    ft = { "go", 'gomod' },
+    build = ':lua require("go.install").update_all_sync()'
+  },
+
+  {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -455,8 +470,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('telescope').setup {
   pickers = {
     find_files = {
-      hidden = true
-    }
+      hidden = true,
+    },
   },
   defaults = {
     mappings = {
@@ -465,6 +480,7 @@ require('telescope').setup {
         ['<C-d>'] = false,
       },
     },
+    file_ignore_patterns = { ".git/" },
   },
 }
 
