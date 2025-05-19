@@ -1,6 +1,9 @@
 -- =====================================================
 -- ----------------Masterboxer's Neovim-----------------
 -- =====================================================
+-- Define `vim` as a global variable for Lua language server
+---@diagnostic disable-next-line: lowercase-global
+vim = vim
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -276,7 +279,6 @@ require('lazy').setup({
     config = function()
       local null_ls = require("null-ls")
       null_ls.setup({
-        on_attach = On_attach,
         sources = {
           null_ls.builtins.formatting.black,
           null_ls.builtins.formatting.prettier,
@@ -740,7 +742,6 @@ mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
       capabilities = capabilities,
-      on_attach = On_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
     }
