@@ -282,15 +282,22 @@ require('lazy').setup({
   },
 
 
-{
-  'nvim-flutter/flutter-tools.nvim',
-  lazy = false,
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    'stevearc/dressing.nvim',
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim',
+    },
+    config = function()
+      require('flutter-tools').setup({
+        lsp = {
+          on_attach = On_attach,
+          capabilities = require('cmp_nvim_lsp').default_capabilities(),
+        },
+      })
+    end,
   },
-  config = true,
-},
 
   {
     'nvimtools/none-ls.nvim',
@@ -691,7 +698,7 @@ On_attach = function(_, bufnr)
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
   nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
@@ -740,25 +747,20 @@ require("mason-lspconfig").setup {
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
--- Configure each server with vim.lsp.config
+
+require("mason-lspconfig").setup {
+  ensure_installed = vim.tbl_keys(servers),
+  automatic_enable = true,
+}
+
 for server_name, server_config in pairs(servers) do
   vim.lsp.config(server_name, {
     capabilities = capabilities,
     settings = server_config,
-    filetypes = server_config.filetypes, -- optional
-    -- optionally add on_attach if you use it
-    -- on_attach = on_attach,
+    filetypes = server_config.filetypes,
+    on_attach = On_attach,
   })
 end
-
--- Enable the following language servers
---  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
---
---  Add any additional override configuration in the following tables. They will be passed to
---  the `settings` field of the server config. You must look up that documentation yourself.
---
---  If you want to override the default filetypes that your language server will attach to you can
---  define the property 'filetypes' to the map in question.
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -771,16 +773,6 @@ local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
-
--- mason_lspconfig.setup_handlers {
---   function(server_name)
---     require('lspconfig')[server_name].setup {
---       capabilities = capabilities,
---       settings = servers[server_name],
---       filetypes = (servers[server_name] or {}).filetypes,
---     }
---   end,
--- }
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
