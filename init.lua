@@ -762,6 +762,14 @@ for server_name, server_config in pairs(servers) do
   })
 end
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dart",
+  callback = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = 'LSP: [G]oto [D]efinition' })
+  end,
+})
+
 -- Setup neovim lua configuration
 require('neodev').setup()
 
