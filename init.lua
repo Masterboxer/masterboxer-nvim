@@ -140,6 +140,12 @@ require('lazy').setup({
     end
   },
 
+
+  {
+    'mg979/vim-visual-multi',
+    branch = 'master'
+  },
+
   {
     'sindrets/diffview.nvim',
     dependencies = {
@@ -762,13 +768,6 @@ for server_name, server_config in pairs(servers) do
   })
 end
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "dart",
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = bufnr, desc = 'LSP: [G]oto [D]efinition' })
-  end,
-})
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -832,6 +831,66 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dart",
+  callback = function()
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    -- Helper function for creating keymaps
+    local nmap = function(keys, func, desc)
+      if desc then
+        desc = 'LSP: ' .. desc
+      end
+      vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+    end
+
+    -- Format keymap
+    local function allow_format(servers)
+      return function(client) return vim.tbl_contains(servers, client.name) end
+    end
+
+    vim.keymap.set({ 'n', 'x' }, '<leader>mm', function()
+      vim.lsp.buf.format({
+        async = false,
+        timeout_ms = 10000,
+        filter = allow_format({
+          'dartls',
+          'null-ls',
+        })
+      })
+    end, { buffer = bufnr, remap = false, desc = "Format With LSP" })
+
+    -- Core LSP keymaps
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+    nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+    nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+
+    -- Documentation keymaps
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+
+    -- Lesser used LSP functionality
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+      vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+  end,
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
