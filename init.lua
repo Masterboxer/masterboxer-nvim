@@ -309,11 +309,29 @@ require('lazy').setup({
     'nvimtools/none-ls.nvim',
     config = function()
       local null_ls = require("null-ls")
+
+      -- Detect operating system
+      local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
+
+      -- Configure prettier based on OS
+      local prettier_config = null_ls.builtins.formatting.prettier
+
+      if is_windows then
+        -- Use specific Windows path
+        prettier_config = null_ls.builtins.formatting.prettier.with({
+          command = "C:\\Users\\s0060400\\AppData\\Roaming\\npm\\prettier.cmd",
+        })
+      else
+        -- Use default prettier (should be in PATH on Linux/macOS)
+        prettier_config = null_ls.builtins.formatting.prettier
+      end
+
       null_ls.setup({
         sources = {
-          null_ls.builtins.formatting.black,
-          null_ls.builtins.formatting.prettier,
-          require("none-ls.diagnostics.eslint"),
+          prettier_config,
+          -- Add other formatters as needed
+          -- null_ls.builtins.formatting.black,
+          -- require("none-ls.diagnostics.eslint"),
         },
       })
     end
@@ -683,7 +701,9 @@ On_attach = function(_, bufnr)
   local opts = { buffer = bufnr, remap = false, desc = "Format With Prettier" }
 
   local function allow_format(servers)
-    return function(client) return vim.tbl_contains(servers, client.name) end
+    return function(client)
+      return vim.tbl_contains(servers, client.name)
+    end
   end
 
   vim.keymap.set({ 'n', 'x' }, '<leader>mm', function()
@@ -697,6 +717,7 @@ On_attach = function(_, bufnr)
         'gopls',
         'clangd',
         'jsonls',
+        'dartls',
       })
     })
   end, opts)
@@ -728,6 +749,35 @@ On_attach = function(_, bufnr)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
 end
+
+-- Format on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = vim.api.nvim_create_augroup("FormatOnSave", { clear = true }),
+  pattern = "*",
+  callback = function()
+    local allow_format = function(servers)
+      return function(client) return vim.tbl_contains(servers, client.name) end
+    end
+
+    vim.lsp.buf.format({
+      async = false,
+      timeout_ms = 10000,
+      filter = allow_format({
+        'lua_ls',
+        'rust_analyzer',
+        'null-ls',
+        'gopls',
+        'clangd',
+        'jsonls',
+        'dartls',
+        'ts_ls',
+        'eslint',
+        'html',
+        'angularls',
+      })
+    })
+  end,
+})
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -847,8 +897,8 @@ vim.api.nvim_create_autocmd("FileType", {
     end
 
     -- Format keymap
-    local function allow_format(servers)
-      return function(client) return vim.tbl_contains(servers, client.name) end
+    local function allow_format(allowed_servers)
+      return function(client) return vim.tbl_contains(allowed_servers, client.name) end
     end
 
     vim.keymap.set({ 'n', 'x' }, '<leader>mm', function()
