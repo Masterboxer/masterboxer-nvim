@@ -162,6 +162,10 @@ require('lazy').setup({
     end
   },
 
+  {
+    "sphamba/smear-cursor.nvim",
+    opts = {},
+  },
 
   {
     'mg979/vim-visual-multi',
