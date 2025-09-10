@@ -27,12 +27,34 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
+local function find_git_root()
+  local current_file = vim.api.nvim_buf_get_name(0)
+  local current_dir
+  local cwd = vim.fn.getcwd()
+
+  if current_file == "" then
+    current_dir = cwd
+  else
+    current_dir = vim.fn.fnamemodify(current_file, ":h")
+  end
+
+  local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
+  if vim.v.shell_error ~= 0 then
+    print("Not a git repository. Using current working directory")
+    return cwd
+  end
+  return git_root
+end
+
+vim.keymap.set('n', '<leader>tr', function()
+  local git_root = find_git_root()
+  vim.cmd('cd ' .. vim.fn.fnameescape(git_root))
+  vim.cmd('terminal')
+  vim.cmd('startinsert')
+end, { desc = 'Open Terminal In Root Directory' })
+
 -- [[ Configure plugins ]]
--- NOTE: Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -486,6 +508,19 @@ vim.keymap.set('n', '<leader>dm', "<cmd>:delmarks!<CR>:delmarks A-Z0-9<CR>", { d
 vim.keymap.set('n', '<leader>tt', "<cmd>:cd %:p:h<CR>:terminal<CR>:startinsert<CR>",
   { desc = 'Open Terminal In Current Directory' })
 
+-- Open terminal to root directory
+vim.keymap.set('n', '<leader>tr', function()
+  local git_root = find_git_root()
+  if git_root then
+    vim.cmd('cd ' .. git_root)
+  else
+    -- Fallback to current working directory if not in a git repo
+    vim.cmd('cd ' .. vim.fn.getcwd())
+  end
+  vim.cmd('terminal')
+  vim.cmd('startinsert')
+end, { desc = 'Open Terminal In Root Directory' })
+
 -- Spectre Related Keymaps
 vim.keymap.set('n', '<leader>ss', '<cmd>lua require("spectre").toggle()<CR>', {
   desc = "Toggle Spectre"
@@ -538,29 +573,6 @@ require('telescope').setup {
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
 
--- Telescope live_grep in git root
--- Function to find the git root directory based on the current buffer's path
-local function find_git_root()
-  -- Use the current buffer's path as the starting point for the git search
-  local current_file = vim.api.nvim_buf_get_name(0)
-  local current_dir
-  local cwd = vim.fn.getcwd()
-  -- If the buffer is not associated with a file, return nil
-  if current_file == "" then
-    current_dir = cwd
-  else
-    -- Extract the directory from the current file's path
-    current_dir = vim.fn.fnamemodify(current_file, ":h")
-  end
-
-  -- Find the Git root directory from the current file's path
-  local git_root = vim.fn.systemlist("git -C " .. vim.fn.escape(current_dir, " ") .. " rev-parse --show-toplevel")[1]
-  if vim.v.shell_error ~= 0 then
-    print("Not a git repository. Searching on current working directory")
-    return cwd
-  end
-  return git_root
-end
 
 -- Custom live_grep function to search in git root
 local function live_grep_git_root()
