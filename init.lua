@@ -363,17 +363,41 @@ require('lazy').setup({
     end
   },
 
-  -- For opening Lazygit in a floating terminal
+  -- For opening terminals in floating windows
   {
     'akinsho/toggleterm.nvim',
     config = function()
+      require('toggleterm').setup({
+        size = 20,
+        open_mapping = [[<c-\>]],
+        hide_numbers = true,
+        shade_filetypes = {},
+        shade_terminals = true,
+        shading_factor = 2,
+        start_in_insert = true,
+        insert_mappings = true,
+        persist_size = true,
+        direction = 'float',
+        close_on_exit = true,
+        shell = vim.o.shell,
+        float_opts = {
+          border = 'curved',
+          winblend = 0,
+          highlights = {
+            border = "Normal",
+            background = "Normal",
+          }
+        }
+      })
+
       local Terminal = require('toggleterm.terminal').Terminal
-      local lazygit  = Terminal:new({
+
+      -- Lazygit terminal
+      local lazygit = Terminal:new({
         cmd = "lazygit",
         hidden = true,
         dir = "git_dir",
         direction = "float",
-
         float_opts = {
           border = "double",
         },
@@ -381,19 +405,101 @@ require('lazy').setup({
           vim.cmd("startinsert!")
           vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
         end,
-
-        -- function that runson closing the terminal
         on_close = function()
           vim.cmd("startinsert!")
         end,
       })
 
+      -- Persistent floating terminal
+      local persistent_terminal = Terminal:new({
+        hidden = true,
+        direction = "float",
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        on_close = function()
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      -- Current directory terminal
+      local current_dir_terminal = Terminal:new({
+        hidden = true,
+        direction = "float",
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        on_close = function()
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      -- Root directory terminal
+      local root_terminal = Terminal:new({
+        hidden = true,
+        direction = "float",
+        float_opts = {
+          border = "curved",
+          winblend = 0,
+        },
+        on_open = function(term)
+          vim.cmd("startinsert!")
+          vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+        end,
+        on_close = function()
+          vim.cmd("startinsert!")
+        end,
+      })
+
+      -- Global functions
       function _G._lazygit_toggle()
         lazygit:toggle()
       end
 
+      function _G._persistent_terminal_toggle()
+        persistent_terminal:toggle()
+      end
+
+      function _G._current_dir_terminal_toggle()
+        -- Get current file's directory, fallback to cwd if no file
+        local current_file = vim.api.nvim_buf_get_name(0)
+        local dir = current_file ~= "" and vim.fn.fnamemodify(current_file, ":h") or vim.fn.getcwd()
+        current_dir_terminal.dir = dir
+        current_dir_terminal:toggle()
+      end
+
+      function _G._root_terminal_toggle()
+        local git_root = find_git_root()
+        root_terminal.dir = git_root
+        root_terminal:toggle()
+      end
+
+      -- Keymaps
       vim.api.nvim_set_keymap("n", "<leader>gg", "<cmd>lua _lazygit_toggle()<CR>",
         { noremap = true, silent = true, desc = "Toggle [L]azygit" })
+
+      vim.api.nvim_set_keymap("n", "<leader>ft", "<cmd>lua _persistent_terminal_toggle()<CR>",
+        { noremap = true, silent = true, desc = "Toggle [F]loating [T]erminal" })
+
+      vim.api.nvim_set_keymap("n", "<leader>tc", "<cmd>lua _current_dir_terminal_toggle()<CR>",
+        { noremap = true, silent = true, desc = "Toggle Terminal in [C]urrent Directory" })
+
+      vim.api.nvim_set_keymap("n", "<leader>tr", "<cmd>lua _root_terminal_toggle()<CR>",
+        { noremap = true, silent = true, desc = "Toggle Terminal in [R]oot Directory" })
+
+      -- Default Ctrl+\ mapping for quick access
+      vim.api.nvim_set_keymap("t", "<C-\\>", "<cmd>ToggleTerm<CR>",
+        { noremap = true, silent = true, desc = "Toggle Terminal" })
     end
   },
 
@@ -507,23 +613,6 @@ vim.keymap.set('n', '<leader>ba', "<cmd>:%bd<CR>", { desc = 'Delete All Buffers'
 
 -- Delete all buffers
 vim.keymap.set('n', '<leader>dm', "<cmd>:delmarks!<CR>:delmarks A-Z0-9<CR>", { desc = 'Delete All Marks' })
-
--- Open terminal to current directory
-vim.keymap.set('n', '<leader>tt', "<cmd>:cd %:p:h<CR>:terminal<CR>:startinsert<CR>",
-  { desc = 'Open Terminal In Current Directory' })
-
--- Open terminal to root directory
-vim.keymap.set('n', '<leader>tr', function()
-  local git_root = find_git_root()
-  if git_root then
-    vim.cmd('cd ' .. git_root)
-  else
-    -- Fallback to current working directory if not in a git repo
-    vim.cmd('cd ' .. vim.fn.getcwd())
-  end
-  vim.cmd('terminal')
-  vim.cmd('startinsert')
-end, { desc = 'Open Terminal In Root Directory' })
 
 -- Spectre Related Keymaps
 vim.keymap.set('n', '<leader>ss', '<cmd>lua require("spectre").toggle()<CR>', {
