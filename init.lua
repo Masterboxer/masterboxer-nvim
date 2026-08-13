@@ -4,21 +4,6 @@
 ----------------- Masterboxer's Neovim ---------------
 =====================================================
 
-  Refactored for Neovim 0.12.
-  Structured after kickstart.nvim's "read every line" philosophy,
-  but keeps Masterboxer's original plugin choices, keymaps, and workflow.
-
-  Notable changes from the old (lazy.nvim / 0.9-era) config:
-    - Plugin manager: lazy.nvim -> vim.pack (native to Neovim 0.11+)
-    - LSP setup: old per-server lspconfig.setup{} calls -> vim.lsp.config() / vim.lsp.enable()
-    - All LSP keymaps consolidated into a single LspAttach autocmd (removes the
-      duplicated dart-specific autocmd block the old config had)
-    - Formatting: none-ls/null-ls (archived upstream) -> conform.nvim, same
-      prettier-on-Windows-path logic preserved, format-on-save preserved
-    - Treesitter: old `nvim-treesitter.configs` API -> new `main`-branch API
-    - vim.loop -> vim.uv, vim.wo.* -> vim.o.* for options, vim.highlight.on_yank -> vim.hl.on_yank
-    - Everything else (theme, statusline, telescope pickers, git tooling,
-      terminal setup, dart/go tooling, oil/spectre/diffview/blamer/etc.) kept as-is.
 --]]
 
 -- ============================================================
@@ -65,9 +50,6 @@ do
 
   vim.o.termguicolors = true
 
-  vim.o.list = true
-  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
   vim.o.inccommand = 'split'
   vim.o.cursorline = true
   vim.o.scrolloff = 10
@@ -94,8 +76,10 @@ do
       end,
     },
   }
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+  vim.keymap.set('n', '[d', function() vim.diagnostic.jump { count = -1, float = true } end,
+    { desc = 'Go to previous diagnostic message' })
+  vim.keymap.set('n', ']d', function() vim.diagnostic.jump { count = 1, float = true } end,
+    { desc = 'Go to next diagnostic message' })
   vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 
   vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
@@ -230,6 +214,7 @@ do
   }
 
   vim.pack.add { gh 'numToStr/Comment.nvim' }
+  ---@diagnostic disable-next-line: missing-fields
   require('Comment').setup {}
 
   vim.pack.add { gh 'folke/which-key.nvim' }
@@ -237,7 +222,7 @@ do
     delay = 0,
     icons = { mappings = vim.g.have_nerd_font },
     spec = {
-      { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
+      { '<leader>s', group = '[S]earch',   mode = { 'n', 'v' } },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       { '<leader>g', group = '[G]it' },
@@ -283,19 +268,20 @@ do
       local gs = require 'gitsigns'
       vim.keymap.set('n', '<leader>ho', gs.preview_hunk, { buffer = bufnr, desc = 'Preview Git Hunk' })
       vim.keymap.set('n', '<leader>hi', gs.preview_hunk_inline, { buffer = bufnr, desc = 'Preview Hunk Inline' })
-      vim.keymap.set('n', '<leader>hn', gs.next_hunk, { buffer = bufnr, desc = 'Next Hunk' })
-      vim.keymap.set('n', '<leader>hp', gs.prev_hunk, { buffer = bufnr, desc = 'Previous Hunk' })
-      vim.keymap.set('n', '<leader>hb', function() gs.blame_line { full = true } end, { buffer = bufnr, desc = 'Show Previous Git Changes' })
+      vim.keymap.set('n', '<leader>hn', function() gs.nav_hunk 'next' end, { buffer = bufnr, desc = 'Next Hunk' })
+      vim.keymap.set('n', '<leader>hp', function() gs.nav_hunk 'prev' end, { buffer = bufnr, desc = 'Previous Hunk' })
+      vim.keymap.set('n', '<leader>hb', function() gs.blame_line { full = true } end,
+        { buffer = bufnr, desc = 'Show Previous Git Changes' })
 
       -- Don't override built-in / fugitive keymaps
       vim.keymap.set({ 'n', 'v' }, ']c', function()
         if vim.wo.diff then return ']c' end
-        vim.schedule(gs.next_hunk)
+        vim.schedule(function() gs.nav_hunk 'next' end)
         return '<Ignore>'
       end, { expr = true, buffer = bufnr, desc = 'Jump to next hunk' })
       vim.keymap.set({ 'n', 'v' }, '[c', function()
         if vim.wo.diff then return '[c' end
-        vim.schedule(gs.prev_hunk)
+        vim.schedule(function() gs.nav_hunk 'prev' end)
         return '<Ignore>'
       end, { expr = true, buffer = bufnr, desc = 'Jump to previous hunk' })
     end,
@@ -367,7 +353,8 @@ do
   local root_terminal = Terminal:new(floating_opts())
 
   vim.keymap.set('n', '<leader>gg', function() lazygit:toggle() end, { desc = 'Toggle [L]azygit' })
-  vim.keymap.set('n', '<leader>ft', function() persistent_terminal:toggle() end, { desc = 'Toggle [F]loating [T]erminal' })
+  vim.keymap.set('n', '<leader>ft', function() persistent_terminal:toggle() end,
+    { desc = 'Toggle [F]loating [T]erminal' })
   vim.keymap.set('n', '<leader>tc', function()
     local current_file = vim.api.nvim_buf_get_name(0)
     current_dir_terminal.dir = current_file ~= '' and vim.fn.fnamemodify(current_file, ':h') or vim.fn.getcwd()
@@ -380,9 +367,12 @@ do
 
   vim.pack.add { gh 'nvim-pack/nvim-spectre', gh 'nvim-lua/plenary.nvim' }
   vim.keymap.set('n', '<leader>ss', function() require('spectre').toggle() end, { desc = 'Toggle Spectre' })
-  vim.keymap.set('n', '<leader>sw', function() require('spectre').open_visual { select_word = true } end, { desc = 'Search current word' })
-  vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', { desc = 'Search current word' })
-  vim.keymap.set('n', '<leader>sp', function() require('spectre').open_file_search { select_word = true } end, { desc = 'Search on current file' })
+  vim.keymap.set('n', '<leader>sw', function() require('spectre').open_visual { select_word = true } end,
+    { desc = 'Search current word' })
+  vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>',
+    { desc = 'Search current word' })
+  vim.keymap.set('n', '<leader>sp', function() require('spectre').open_file_search { select_word = true } end,
+    { desc = 'Search on current file' })
 
   -- live-server.nvim >= v0.2.0 dropped require('live-server').setup{} in favor of
   -- a vim.g global that must be set before the plugin loads.
@@ -444,7 +434,8 @@ do
   vim.keymap.set('n', '<leader>sG', '<cmd>LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
   vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
 
-  vim.keymap.set('n', '<leader>q', function() builtin.diagnostics { initial_mode = 'normal' } end, { desc = '[S]earch [A]ll [D]iagnostics' })
+  vim.keymap.set('n', '<leader>q', function() builtin.diagnostics { initial_mode = 'normal' } end,
+    { desc = '[S]earch [A]ll [D]iagnostics' })
 end
 
 -- ============================================================
@@ -520,9 +511,11 @@ do
       map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
       map('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
       map('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-      map('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, '[W]orkspace [L]ist Folders')
+      map('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+        '[W]orkspace [L]ist Folders')
 
-      vim.api.nvim_buf_create_user_command(event.buf, 'Format', function() vim.lsp.buf.format() end, { desc = 'Format current buffer with LSP' })
+      vim.api.nvim_buf_create_user_command(event.buf, 'Format', function() vim.lsp.buf.format() end,
+        { desc = 'Format current buffer with LSP' })
 
       -- Document highlight on cursor hold
       local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -548,7 +541,9 @@ do
       end
 
       if client and client:supports_method('textDocument/inlayHint', event.buf) then
-        map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+        map('<leader>th',
+          function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end,
+          '[T]oggle Inlay [H]ints')
       end
     end,
   })
