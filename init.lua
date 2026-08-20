@@ -441,7 +441,18 @@ end
 -- ============================================================
 -- SECTION 8: TREESITTER
 -- ============================================================
+
 do
+  -- Windows has no MSVC toolchain on PATH — point the `cc` crate at wrapper
+  -- scripts that forward to `zig cc`/`zig c++`. A literal "zig cc" string in
+  -- CC doesn't split correctly on Windows, hence the wrapper files.
+  -- No-op on Linux/macOS.
+  if vim.fn.has 'win32' == 1 then
+    local config_dir = vim.fn.stdpath 'config'
+    vim.env.CC = vim.env.CC or (config_dir .. '\\zigcc.cmd')
+    vim.env.CXX = vim.env.CXX or (config_dir .. '\\zigcxx.cmd')
+  end
+
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   local parsers = {
