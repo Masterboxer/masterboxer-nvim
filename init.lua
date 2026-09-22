@@ -561,6 +561,7 @@ do
 
   ---@type table<string, vim.lsp.Config>
   local servers = {
+    gopls = {},
     ts_ls = {},
     eslint = {},
     html = { filetypes = { 'html', 'twig', 'hbs' } },
